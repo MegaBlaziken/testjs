@@ -176,18 +176,18 @@ var formatdata = {
 
 //slash commands
 const interactiondata = [
-  {name: "geso",description: "ゲソタウンのギアをすべて取得。"},
-  {name: "help",description:"ヘルプコマンド"},
-  {name: "update",description:"コマンド追加用"},
-  {name: "xmatch",description: "Xマッチのステージを取得します。" },
-  {name: "turf",description: "ナワバリのステージを取得します。"},
-  {name: "series",description: "チャレンジのステージを取得します。"},
-  {name: "open",description: "オープンのステージを取得します。"},
-  {name: "coop",description: "サーモンランの情報を取得します。"},
+  {name: "geso",    description: "ゲソタウンのギアをすべて取得。"},
+  {name: "help",    description:"ヘルプコマンド"},
+  {name: "update",  description:"コマンド追加用"},
+  {name: "xmatch",  description: "Xマッチのステージを取得します。" },
+  {name: "turf",    description: "ナワバリのステージを取得します。"},
+  {name: "series",  description: "チャレンジのステージを取得します。"},
+  {name: "open",    description: "オープンのステージを取得します。"},
+  {name: "coop",    description: "サーモンランの情報を取得します。"},
 ];
 
 //get gears
-cron.schedule('20 0 1,5,9,13,17,21 * * *', () => {
+cron.schedule('30 0 1,5,9,13,17,21 * * *', () => {
     //ゲソタウンデータ取得
     var options1 = {
       url: 'https://splatoon3.ink/data/gear.json',
@@ -204,7 +204,7 @@ cron.schedule('20 0 1,5,9,13,17,21 * * *', () => {
     request.get(options1, gets1);  
 });
 //get schedule
-cron.schedule('20 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
+cron.schedule('30 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
   //ステージ取得
   var options2 = {
     url: 'https://splatoon3.ink/data/schedules.json',
@@ -231,7 +231,7 @@ function nowtime(){
 
 
 const sclient= new Discord.Client({
-  intents: Object.keys(Discord.Intents.FLAGS)
+  intents: Object.keys(Discord.Intents.FLAGS, Discord.Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS)
 });
 sclient.on('ready', async () => {
   nowtime()
@@ -253,7 +253,7 @@ sclient.on('ready', async () => {
       console.log(`{${d}日${h}時${m}分${s}秒} ゲソタウンリクエスト送信`)
     }
   }
-  request.get(options1, gets1);  
+  request.get(options1, gets1);
   //ステージ取得
   var options2 = {
     url: 'https://splatoon3.ink/data/schedules.json',
@@ -283,21 +283,22 @@ sclient.on('ready', async () => {
   }
   request.get(options3, gets3);
   const geso_channel = await sclient.channels.fetch(c_geso)
-    cron.schedule('10 0 1,5,9,13,17,21 * * *', () => {
+    cron.schedule('35 0 1,5,9,13,17,21 * * *', () => {
     //普通のギア
     var limited = gesodata.data.gesotown.limitedGears
     var limitedgearembed = []
-    let i = 5; {
+    for (let i = 0; i < 6; i++) {
       var MainJP = formatdata.gearPower[limited[i].gear.primaryGearPower.name].name
       var FavoJP = formatdata.brands[limited[i].gear.brand.name].Favored_Ability
       var BrandJP = formatdata.brands[limited[i].gear.brand.name].name
+      var GearName = langdata.gear[limited[i].gear.__splatoon3ink_id].name
       var GearType = formatdata.GearTypes[limited[i].gear.__typename].name
       if((limited[i].gear.additionalGearPowers).length == 1){
         limitedgearembed.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(limited[i].gear.name)
+        .setTitle(GearName)
         .setDescription(limited[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: '📢 新規入荷！', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(limited[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -315,9 +316,9 @@ sclient.on('ready', async () => {
       if((limited[i].gear.additionalGearPowers).length == 2){
         limitedgearembed.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(limited[i].gear.name)
+        .setTitle(GearName)
         .setDescription(limited[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: '📢 新規入荷！', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(limited[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -335,9 +336,9 @@ sclient.on('ready', async () => {
       if((limited[i].gear.additionalGearPowers).length == 3){
         limitedgearembed.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(limited[i].gear.name)
+        .setTitle(GearName)
         .setDescription(limited[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: '📢 新規入荷！', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(limited[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -354,9 +355,10 @@ sclient.on('ready', async () => {
       }
     }
     geso_channel.send({embeds: [limitedgearembed[5]]})
+    nowtime()
     console.log(`{${d}日${h}時${m}分${s}秒} ゲソタウン入荷送信`)
     })
-    cron.schedule('10 0 9 * * *', () => {
+    cron.schedule('35 0 9 * * *', () => {
     //ピックアップギア
     var pickupbrand = gesodata.data.gesotown.pickupBrand
     var pickupembeds = []
@@ -364,13 +366,14 @@ sclient.on('ready', async () => {
       var MainJP = formatdata.gearPower[pickupbrand.brandGears[i].gear.primaryGearPower.name].name
       var FavoJP = formatdata.brands[pickupbrand.brandGears[i].gear.brand.name].Favored_Ability
       var BrandJP = formatdata.brands[pickupbrand.brandGears[i].gear.brand.name].name
+      var GearName = langdata.gear[pickupbrand.brandGears[i].gear.__splatoon3ink_id].name
       var GearType = formatdata.GearTypes[pickupbrand.brandGears[i].gear.__typename].name
       if((pickupbrand.brandGears[i].gear.additionalGearPowers).length == 1){
         pickupembeds.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(pickupbrand.brandGears[i].gear.name)
+        .setTitle(GearName)
         .setDescription(pickupbrand.brandGears[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: '📢 今日のピックアップ！', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(pickupbrand.brandGears[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -388,9 +391,9 @@ sclient.on('ready', async () => {
       if((pickupbrand.brandGears[i].gear.additionalGearPowers).length == 2){
         pickupembeds.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(pickupbrand.brandGears[i].gear.name)
+        .setTitle(GearName)
         .setDescription(pickupbrand.brandGears[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: '📢 今日のピックアップ！', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(pickupbrand.brandGears[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -408,9 +411,9 @@ sclient.on('ready', async () => {
       if((pickupbrand.brandGears[i].gear.additionalGearPowers).length == 3){
         pickupembeds.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(pickupbrand.brandGears[i].gear.name)
+        .setTitle(GearName)
         .setDescription(pickupbrand.brandGears[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: '📢 今日のピックアップ！', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(pickupbrand.brandGears[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -427,10 +430,11 @@ sclient.on('ready', async () => {
       }
     }
     geso_channel.send({embeds: [pickupembeds[0],pickupembeds[1],pickupembeds[2]]})
+    nowtime()
     console.log(`{${d}日${h}時${m}分${s}秒} ゲソタウンピックアップギア入荷送信`)
     })
     const nawa_channel = await sclient.channels.fetch(c_turf)
-    cron.schedule('10 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
+    cron.schedule('35 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
     // ナワバリバトル
     var turfSC = stagedata.data.regularSchedules
     var festSC = stagedata.data.festSchedules
@@ -443,9 +447,10 @@ sclient.on('ready', async () => {
         var Stage2JP = langdata.stages[turfSC.nodes[i].regularMatchSetting.vsStages[1].id].name
         turfembed.push(new Discord.MessageEmbed()
         .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-        .setColor(0xff0099)
+        .setColor(0x19d719)
         .setTitle('ナワバリバトル')
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setThumbnail('https://splatoon3.ink/assets/regular.64299513.svg')
         .addFields({ name: '開催時間', value: `${moment(turfSC.nodes[i].startTime).date()}日${moment(turfSC.nodes[i].startTime).hours()}:00～${moment(turfSC.nodes[i].endTime).date()}日${moment(turfSC.nodes[i].endTime).hours()}:00`},
         { name: 'ステージ1', value: Stage1JP, inline: true },
         { name: 'ステージ2', value: Stage2JP, inline: true },
@@ -462,7 +467,7 @@ sclient.on('ready', async () => {
           var Stage2JP = langdata.stages[festSC.nodes[festcount - 1].festMatchSetting.vsStages[1].id].name
           turfembed.push(new Discord.MessageEmbed()
           .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(festcount))
-          .setColor(0xff0099)
+          .setColor(0x19d719)
           .setTitle('フェスマッチ : ナワバリバトル')
           .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
           .addFields({ name: '開催時間', value: `${moment(festSC.nodes[i].startTime).date()}日${moment(festSC.nodes[i].startTime).hours()}:00～${moment(festSC.nodes[i].endTime).date()}日${moment(festSC.nodes[i].endTime).hours()}:00`},
@@ -480,15 +485,16 @@ sclient.on('ready', async () => {
     //フェスなどで取得できないとき
     if(turfembed.length == 0){
       turfembed.push(new Discord.MessageEmbed()
-      .setColor(0xff0099)
+      .setColor(0x19d719)
       .setTitle('現在フェスのためナワバリバトルは行われていません。')
       )
     }
     nawa_channel.send({embeds: turfembed})
+    nowtime()
     console.log(`{${d}日${h}時${m}分${s}秒} ナワバリバトル送信`)
     })
     const b_channel = await sclient.channels.fetch(c_bankara)
-    cron.schedule('10 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
+    cron.schedule('35 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
     // チャレンジマッチ
     var bankarasc =  stagedata.data.bankaraSchedules
     var cembed = []
@@ -501,9 +507,10 @@ sclient.on('ready', async () => {
       if(bankarasc.nodes[i].festMatchSetting == null){
         cembed.push(new Discord.MessageEmbed()
         .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-        .setColor(0xff0099)
+        .setColor(0xf54910)
         .setTitle(`バンカラマッチチャレンジ---${rule}`)
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setThumbnail('https://splatoon3.ink/assets/bankara.996009b0.svg')
         .addFields({ name: '開催時間', value: `${moment(bankarasc.nodes[i].startTime).date()}日${moment(bankarasc.nodes[i].startTime).hours()}:00～${moment(bankarasc.nodes[i].endTime).date()}日${moment(bankarasc.nodes[i].endTime).hours()}:00`},
         { name: 'ステージ1', value:  Stage1JP, inline: true },
         { name: 'ステージ2', value:  Stage2JP, inline: true }
@@ -519,18 +526,19 @@ sclient.on('ready', async () => {
     //フェスなどで取得できないとき
     if(cembed.length == 0){
       cembed.push(new Discord.MessageEmbed()
-      .setColor(0xff0099)
+      .setColor(0xf54910)
       .setTitle('現在フェスのためバンカラマッチ（チャレンジ）は行われていません。')
       )
     }
     b_channel.send({embeds: cembed})
+    nowtime()
     console.log(`{${d}日${h}時${m}分${s}秒} チャレンジ送信`)
     })
-    cron.schedule('10 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
+    cron.schedule('35 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
     // オープンマッチ
     var bankarasc =  stagedata.data.bankaraSchedules
     var oembed = []
-    
+
     let i = 0;{
       if(bankarasc.nodes[i].bankaraMatchSettings !== null){
           var rule = langdata.rules[bankarasc.nodes[i].bankaraMatchSettings[1].vsRule.id].name
@@ -539,9 +547,10 @@ sclient.on('ready', async () => {
           if(bankarasc.nodes[i].festMatchSetting == null){
             oembed.push(new Discord.MessageEmbed()
             .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-            .setColor(0xff0099)
+            .setColor(0xf58310)
             .setTitle(`バンカラマッチオープン---${rule}`)
             .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+            .setThumbnail('https://splatoon3.ink/assets/bankara.996009b0.svg')
             .addFields({ name: '開催時間', value: `${moment(bankarasc.nodes[i].startTime).date()}日${moment(bankarasc.nodes[i].startTime).hours()}:00～${moment(bankarasc.nodes[i].endTime).date()}日${moment(bankarasc.nodes[i].endTime).hours()}:00`},
             { name: 'ステージ1', value: Stage1JP, inline: true },
             { name: 'ステージ2', value: Stage2JP, inline: true }
@@ -556,20 +565,21 @@ sclient.on('ready', async () => {
       }
       //フェスなどで取得できないとき
       if(oembed.length == 0){
-       oembed.push(new Discord.MessageEmbed()
-       .setColor(0xff0099)
+        oembed.push(new Discord.MessageEmbed()
+        .setColor(0xf58310)
         .setTitle('現在フェスのためバンカラマッチ（オープン）は行われていません。')
-       )
+        )
       }
     b_channel.send({embeds: oembed})
+    nowtime()
     console.log(`{${d}日${h}時${m}分${s}秒} オープン送信`)
     })
     const x_channel = await sclient.channels.fetch(c_xmatch)
-    cron.schedule('10 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
+    cron.schedule('35 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', () => {
     // Xマッチ
     var Xsc =  stagedata.data.xSchedules
     var Xembed = []
-    
+
     let i = 0; {
       if(Xsc.nodes[i].xMatchSetting !== null){
           var rule = langdata.rules[Xsc.nodes[i].xMatchSetting.vsRule.id].name
@@ -578,9 +588,10 @@ sclient.on('ready', async () => {
           if(Xsc.nodes[i].festMatchSetting == null){
             Xembed.push(new Discord.MessageEmbed()
             .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-            .setColor(0xff0099)
+            .setColor(0x0fdb9b)
             .setTitle(`Xマッチ---${rule}`)
             .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+            .setThumbnail('https://splatoon3.ink/assets/x.4bec815d.svg')
             .addFields({ name: '開催時間', value: `${moment(Xsc.nodes[i].startTime).date()}日${moment(Xsc.nodes[i].startTime).hours()}:00～${moment(Xsc.nodes[i].endTime).date()}日${moment(Xsc.nodes[i].endTime).hours()}:00`},
             { name: 'ステージ1', value: Stage1JP, inline: true },
             { name: 'ステージ2', value: Stage2JP, inline: true }
@@ -596,15 +607,16 @@ sclient.on('ready', async () => {
     //フェスなどで取得できないとき
     if(Xembed.length == 0){
       Xembed.push(new Discord.MessageEmbed()
-      .setColor(0xff0099)
+      .setColor(0x0fdb9b)
       .setTitle('現在フェスのためXマッチは行われていません。')
       )
     }
     x_channel.send({embeds: Xembed})
+    nowtime()
     console.log(`{${d}日${h}時${m}分${s}秒} Xマッチ送信`)
     })
     const salmon_channel = await sclient.channels.fetch(c_salmon)
-    cron.schedule('10 0 9 * * *', () => {
+    cron.schedule('35 0 1,9,17 * * *', () => {
     var coopsc =  stagedata.data.coopGroupingSchedule.regularSchedules
     var coopembeds = []
     var limitco = 2
@@ -620,9 +632,10 @@ sclient.on('ready', async () => {
         var weapon4 = langdata.weapons[bigrunsc.nodes[BGi].setting.weapons[3].__splatoon3ink_id].name
         var stage = langdata.stages[bigrunsc.nodes[BGi].setting.coopStage.id].name
         coopembeds.push(new Discord.MessageEmbed()
-      .setColor(0xff0000)
+      .setColor(0xff5600)
       .setTitle(`${stage}`)
       .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+      .setThumbnail('https://splatoon2.ink/assets/img/mr-grizz.a87af81b.png')
       .addFields({ name: '開催時間', value: `${moment(bigrunsc.nodes[BGi].startTime).date()}日${moment(bigrunsc.nodes[BGi].startTime).hours()}:00～${moment(bigrunsc.nodes[BGi].endTime).date()}日${moment(bigrunsc.nodes[BGi].endTime).hours()}:00`},
       { name: '武器1', value: weapon1, inline: true},
       { name: '武器2', value: weapon2, inline: true},
@@ -640,9 +653,10 @@ sclient.on('ready', async () => {
         var weapon4 = langdata.weapons[coopsc.nodes[i].setting.weapons[3].__splatoon3ink_id].name
         var stage = langdata.stages[coopsc.nodes[i].setting.coopStage.id].name
         coopembeds.push(new Discord.MessageEmbed()
-        .setColor(0xff0099)
+        .setColor(0xff5600)
         .setTitle(`${stage}`)
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setThumbnail('https://splatoon2.ink/assets/img/mr-grizz.a87af81b.png')
         .addFields({ name: '開催時間', value: `${moment(coopsc.nodes[i].startTime).date()}日${moment(coopsc.nodes[i].startTime).hours()}:00～${moment(coopsc.nodes[i].endTime).date()}日${moment(coopsc.nodes[i].endTime).hours()}:00`},
         { name: '武器1', value: weapon1, inline: true},
         { name: '武器2', value: weapon2, inline: true},
@@ -652,7 +666,7 @@ sclient.on('ready', async () => {
         )
         .setImage(coopsc.nodes[i].setting.coopStage.image.url)
       )
-  
+
       }
       if((coopsc.nodes[i+1].startTime !== coopsc.nodes[i].endTime)){
         normal()
@@ -669,6 +683,7 @@ sclient.on('ready', async () => {
       }
     }
     salmon_channel.send({embeds: coopembeds})
+    nowtime()
     console.log(`{${d}日${h}時${m}分${s}秒} サーモン送信`)
     })
 });
@@ -696,7 +711,7 @@ sclient.on("messageCreate", async message => {
   }
 })
 sclient.on('guildCreate', async guild => {
-   sclient.user.setActivity(sclient.guilds.cache.size + 'サーバーに参加中｜s3.help', {
+  sclient.user.setActivity(sclient.guilds.cache.size + 'サーバーに参加中｜s3.help', {
     type: 'PLAYING'
   });
   await sclient.application.commands.set(interactiondata, guild.id);
@@ -715,13 +730,14 @@ sclient.on("interactionCreate", async (interaction) => {
       var MainJP = formatdata.gearPower[pickupbrand.brandGears[i].gear.primaryGearPower.name].name
       var FavoJP = formatdata.brands[pickupbrand.brandGears[i].gear.brand.name].Favored_Ability
       var BrandJP = formatdata.brands[pickupbrand.brandGears[i].gear.brand.name].name
+      var GearName = langdata.gear[pickupbrand.brandGears[i].gear.__splatoon3ink_id].name
       var GearType = formatdata.GearTypes[pickupbrand.brandGears[i].gear.__typename].name
       if((pickupbrand.brandGears[i].gear.additionalGearPowers).length == 1){
         pickupembeds.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(pickupbrand.brandGears[i].gear.name)
+        .setTitle(GearName)
         .setDescription(pickupbrand.brandGears[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: 'ピックアップギア', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(pickupbrand.brandGears[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -739,9 +755,9 @@ sclient.on("interactionCreate", async (interaction) => {
       if((pickupbrand.brandGears[i].gear.additionalGearPowers).length == 2){
         pickupembeds.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(pickupbrand.brandGears[i].gear.name)
+        .setTitle(GearName)
         .setDescription(pickupbrand.brandGears[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: 'ピックアップギア', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(pickupbrand.brandGears[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -759,9 +775,9 @@ sclient.on("interactionCreate", async (interaction) => {
       if((pickupbrand.brandGears[i].gear.additionalGearPowers).length == 3){
         pickupembeds.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(pickupbrand.brandGears[i].gear.name)
+        .setTitle(GearName)
         .setDescription(pickupbrand.brandGears[i].price.toString() +"ゲソ")
-        .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setAuthor({ name: 'ピックアップギア', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(pickupbrand.brandGears[i].gear.primaryGearPower.image.url)
         .addFields(
           { name: 'ギアの種類', value: GearType, inline: true },
@@ -784,11 +800,12 @@ sclient.on("interactionCreate", async (interaction) => {
       var MainJP = formatdata.gearPower[limited[i].gear.primaryGearPower.name].name
       var FavoJP = formatdata.brands[limited[i].gear.brand.name].Favored_Ability
       var BrandJP = formatdata.brands[limited[i].gear.brand.name].name
+      var GearName = langdata.gear[limited[i].gear.__splatoon3ink_id].name
       var GearType = formatdata.GearTypes[limited[i].gear.__typename].name
       if((limited[i].gear.additionalGearPowers).length == 1){
         limitedgearembed.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(limited[i].gear.name)
+        .setTitle(GearName)
         .setDescription(limited[i].price.toString() +"ゲソ")
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(limited[i].gear.primaryGearPower.image.url)
@@ -808,7 +825,7 @@ sclient.on("interactionCreate", async (interaction) => {
       if((limited[i].gear.additionalGearPowers).length == 2){
         limitedgearembed.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(limited[i].gear.name)
+        .setTitle(GearName)
         .setDescription(limited[i].price.toString() +"ゲソ")
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(limited[i].gear.primaryGearPower.image.url)
@@ -828,7 +845,7 @@ sclient.on("interactionCreate", async (interaction) => {
       if((limited[i].gear.additionalGearPowers).length == 3){
         limitedgearembed.push(new Discord.MessageEmbed()
         .setColor(0xff0099)
-        .setTitle(limited[i].gear.name)
+        .setTitle(GearName)
         .setDescription(limited[i].price.toString() +"ゲソ")
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
         .setThumbnail(limited[i].gear.primaryGearPower.image.url)
@@ -863,6 +880,7 @@ sclient.on("interactionCreate", async (interaction) => {
     var festSC = stagedata.data.festSchedules
     var turfembed = []
     var limit = 5
+    //const regular = sclient.emojis.cache.get("1066539179200237579");
 
     var festcount = 0
     for (let i = 0; i < limit ; i++) {
@@ -871,9 +889,10 @@ sclient.on("interactionCreate", async (interaction) => {
         var Stage2JP = langdata.stages[turfSC.nodes[i].regularMatchSetting.vsStages[1].id].name
         turfembed.push(new Discord.MessageEmbed()
         .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-        .setColor(0xff0099)
+        .setColor(0x19d719)
         .setTitle('ナワバリバトル')
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setThumbnail('https://media.discordapp.net/attachments/1065472888985100378/1069820233306603530/regular.png')
         .addFields({ name: '開催時間', value: `${moment(turfSC.nodes[i].startTime).date()}日${moment(turfSC.nodes[i].startTime).hours()}:00～${moment(turfSC.nodes[i].endTime).date()}日${moment(turfSC.nodes[i].endTime).hours()}:00`},
         { name: 'ステージ1', value: Stage1JP, inline: true },
         { name: 'ステージ2', value: Stage2JP, inline: true },
@@ -890,9 +909,10 @@ sclient.on("interactionCreate", async (interaction) => {
           var Stage2JP = langdata.stages[festSC.nodes[festcount - 1].festMatchSetting.vsStages[1].id].name
           turfembed.push(new Discord.MessageEmbed()
           .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(festcount))
-          .setColor(0xff0099)
+          .setColor(0x19d719)
           .setTitle('フェスマッチ : ナワバリバトル')
           .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+          .setThumbnail('https://media.discordapp.net/attachments/1065472888985100378/1069820233306603530/regular.png')
           .addFields({ name: '開催時間', value: `${moment(festSC.nodes[i].startTime).date()}日${moment(festSC.nodes[i].startTime).hours()}:00～${moment(festSC.nodes[i].endTime).date()}日${moment(festSC.nodes[i].endTime).hours()}:00`},
           { name: 'ステージ1', value: Stage1JP, inline: true },
           { name: 'ステージ2', value: Stage2JP, inline: true },
@@ -908,7 +928,7 @@ sclient.on("interactionCreate", async (interaction) => {
     //フェスなどで取得できないとき
     if(turfembed.length == 0){
       turfembed.push(new Discord.MessageEmbed()
-      .setColor(0xff0099)
+      .setColor(0x19d719)
       .setTitle('現在フェスのためナワバリバトルは行われていません。')
       )
     }
@@ -927,9 +947,10 @@ sclient.on("interactionCreate", async (interaction) => {
       if(bankarasc.nodes[i].festMatchSetting == null){
         cembed.push(new Discord.MessageEmbed()
         .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-        .setColor(0xff0099)
-        .setTitle(`バンカラマッチチャレンジ---${rule}`)
+        .setColor(0xf54910)
+        .setTitle(`チャレンジ---${rule}`)
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setThumbnail('https://media.discordapp.net/attachments/1065472888985100378/1069820232912343130/bankara.png')
         .addFields({ name: '開催時間', value: `${moment(bankarasc.nodes[i].startTime).date()}日${moment(bankarasc.nodes[i].startTime).hours()}:00～${moment(bankarasc.nodes[i].endTime).date()}日${moment(bankarasc.nodes[i].endTime).hours()}:00`},
         { name: 'ステージ1', value:  Stage1JP, inline: true },
         { name: 'ステージ2', value:  Stage2JP, inline: true }
@@ -945,7 +966,7 @@ sclient.on("interactionCreate", async (interaction) => {
     //フェスなどで取得できないとき
     if(cembed.length == 0){
       cembed.push(new Discord.MessageEmbed()
-      .setColor(0xff0099)
+      .setColor(0xf54910)
       .setTitle('現在フェスのためバンカラマッチは行われていません。')
       )
     }
@@ -955,7 +976,7 @@ sclient.on("interactionCreate", async (interaction) => {
     var bankarasc =  stagedata.data.bankaraSchedules
     var oembed = []
     var limito = 5
-    
+
     for (let i = 0; i < limito ; i++) {
       if(bankarasc.nodes[i].bankaraMatchSettings !== null){
           var rule = langdata.rules[bankarasc.nodes[i].bankaraMatchSettings[1].vsRule.id].name
@@ -964,9 +985,10 @@ sclient.on("interactionCreate", async (interaction) => {
           if(bankarasc.nodes[i].festMatchSetting == null){
             oembed.push(new Discord.MessageEmbed()
             .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-            .setColor(0xff0099)
-            .setTitle(`バンカラマッチオープン---${rule}`)
+            .setColor(0xf58310)
+            .setTitle(`オープン---${rule}`)
             .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+            .setThumbnail('https://media.discordapp.net/attachments/1065472888985100378/1069820232912343130/bankara.png')
             .addFields({ name: '開催時間', value: `${moment(bankarasc.nodes[i].startTime).date()}日${moment(bankarasc.nodes[i].startTime).hours()}:00～${moment(bankarasc.nodes[i].endTime).date()}日${moment(bankarasc.nodes[i].endTime).hours()}:00`},
             { name: 'ステージ1', value: Stage1JP, inline: true },
             { name: 'ステージ2', value: Stage2JP, inline: true }
@@ -983,7 +1005,7 @@ sclient.on("interactionCreate", async (interaction) => {
     //フェスなどで取得できないとき
     if(oembed.length == 0){
       oembed.push(new Discord.MessageEmbed()
-      .setColor(0xff0099)
+      .setColor(0xf58310)
       .setTitle('現在フェスのためバンカラマッチは行われていません。')
       )
     }
@@ -1002,9 +1024,10 @@ sclient.on("interactionCreate", async (interaction) => {
           if(Xsc.nodes[i].festMatchSetting == null){
             Xembed.push(new Discord.MessageEmbed()
             .setURL('https://discord.com/channels/588336492049465364/588343228063940619/1038374680240861234%index='+String(i))
-            .setColor(0xff0099)
+            .setColor(0x0fdb9b)
             .setTitle(`Xマッチ---${rule}`)
             .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+            .setThumbnail('https://media.discordapp.net/attachments/1065472888985100378/1069820233507934258/xmatch.png')
             .addFields({ name: '開催時間', value: `${moment(Xsc.nodes[i].startTime).date()}日${moment(Xsc.nodes[i].startTime).hours()}:00～${moment(Xsc.nodes[i].endTime).date()}日${moment(Xsc.nodes[i].endTime).hours()}:00`},
             { name: 'ステージ1', value: Stage1JP, inline: true },
             { name: 'ステージ2', value: Stage2JP, inline: true }
@@ -1021,7 +1044,7 @@ sclient.on("interactionCreate", async (interaction) => {
     //フェスなどで取得できないとき
     if(Xembed.length == 0){
       Xembed.push(new Discord.MessageEmbed()
-      .setColor(0xff0099)
+      .setColor(0x0fdb9b)
       .setTitle('現在フェスのためXマッチは行われていません。')
       )
     }
@@ -1043,9 +1066,10 @@ sclient.on("interactionCreate", async (interaction) => {
         var weapon4 = langdata.weapons[bigrunsc.nodes[BGi].setting.weapons[3].__splatoon3ink_id].name
         var stage = langdata.stages[bigrunsc.nodes[BGi].setting.coopStage.id].name
         coopembeds.push(new Discord.MessageEmbed()
-      .setColor(0xff0000)
+      .setColor(0xff5600)
       .setTitle(`${stage}`)
       .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+      .setThumbnail('https://cdn.discordapp.com/attachments/1065472888985100378/1069818271815192647/salmon.png')
       .addFields({ name: '開催時間', value: `${moment(bigrunsc.nodes[BGi].startTime).date()}日${moment(bigrunsc.nodes[BGi].startTime).hours()}:00～${moment(bigrunsc.nodes[BGi].endTime).date()}日${moment(bigrunsc.nodes[BGi].endTime).hours()}:00`},
       { name: '武器1', value: weapon1, inline: true},
       { name: '武器2', value: weapon2, inline: true},
@@ -1063,9 +1087,10 @@ sclient.on("interactionCreate", async (interaction) => {
         var weapon4 = langdata.weapons[coopsc.nodes[i].setting.weapons[3].__splatoon3ink_id].name
         var stage = langdata.stages[coopsc.nodes[i].setting.coopStage.id].name
         coopembeds.push(new Discord.MessageEmbed()
-        .setColor(0xff0099)
+        .setColor(0xff5600)
         .setTitle(`${stage}`)
         .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
+        .setThumbnail('https://cdn.discordapp.com/attachments/1065472888985100378/1069818271815192647/salmon.png')
         .addFields({ name: '開催時間', value: `${moment(coopsc.nodes[i].startTime).date()}日${moment(coopsc.nodes[i].startTime).hours()}:00～${moment(coopsc.nodes[i].endTime).date()}日${moment(coopsc.nodes[i].endTime).hours()}:00`},
         { name: '武器1', value: weapon1, inline: true},
         { name: '武器2', value: weapon2, inline: true},
@@ -1075,8 +1100,7 @@ sclient.on("interactionCreate", async (interaction) => {
         )
         .setImage(coopsc.nodes[i].setting.coopStage.image.url)
       )
-  
-  
+
       }
       if((coopsc.nodes[i+1].startTime !== coopsc.nodes[i].endTime)){
         normal()
