@@ -632,7 +632,7 @@ sclient.on('ready', async () => {
         var weapon4 = langdata.weapons[bigrunsc.nodes[BGi].setting.weapons[3].__splatoon3ink_id].name
         var stage = langdata.stages[bigrunsc.nodes[BGi].setting.coopStage.id].name
         coopembeds.push(new Discord.MessageEmbed()
-      .setColor(0xff5600)
+      .setColor(0xb322ff)
       .setTitle(`${stage}`)
       .setAuthor({ name: 'Splatoon3.inkにより出力', iconURL: 'https://splatoon3.ink/assets/little-buddy.445c3c88.png', url: 'https://github.com/misenhower/splatoon3.ink' })
       .setThumbnail('https://splatoon2.ink/assets/img/mr-grizz.a87af81b.png')
